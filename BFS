@@ -1,0 +1,21 @@
+//BFS. Basic template to run BFS
+
+queue <pair<ll, ll>> q;
+    q.push({0, 0});
+    
+    bool visited[MAXN];
+    
+    while (!q.empty()) {
+        pair<ll, ll> cur = q.front();
+        q.pop();
+        
+        if (visited[cur.first]) {
+            continue;
+        }
+        
+        visited[cur.first] = true;
+        
+        for (auto el: adj[cur.first]) {
+            q.push({el, cur.second + 1});
+        }
+    }
