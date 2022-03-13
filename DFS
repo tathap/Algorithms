@@ -1,0 +1,26 @@
+vector <ll> adj[MAXN];
+bool visited[MAXN];
+
+void templateDFS(ll node) {
+    for (auto el: adj[node]) {
+        if (!visited[el]) {
+            visited[el] = true;
+            templateDFS(el);
+        }
+    }
+}
+
+
+//For a tree, you don't need a visited array. Just root it at a certain node(usually node 0) and dfs while storing the current node and its parent
+vector <ll> adj[MAXN];
+
+void templateDFS(ll node, parent) {
+    for (auto el: adj[node]) {
+        if (el == parent) {
+            continue;
+        }
+        
+        templateDFS(el, node);
+    }
+}
+          
