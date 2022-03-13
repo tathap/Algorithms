@@ -1,0 +1,179 @@
+//#include <bits/stdc++.h>
+#include <iostream>
+#include <fstream>
+#include <algorithm>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <math.h>
+#include <set>
+#include <map>
+#include <string>
+#include <tuple>
+#include <numeric>
+#include <climits>
+
+using namespace std;
+
+//change the long long to int if you need to save memory/time really badly
+typedef long long ll;
+
+//Comment this define when working on interactive problems
+#define endl "\n"
+
+const ll MAXN = 1e5 + 1;
+const ll zer = 0;
+const ll one = 1;
+const ll inf = 1e10;
+const ll ninf = -1 * 1e10;
+const ll MOD = 1e9 + 7;
+
+
+ll max(ll a, ll b) {
+    if (a > b) {
+        return a;
+    } else {
+        return b;
+    }
+}
+
+ll n, q; //number of nodes and queries
+
+vector <ll> adj[MAXN]; //graph
+
+ll dp[MAXN][32]; //dp[i][j] is the dynamic programming array we use for binary jumping. dp[i][j] will store the ancestor of node i that is 2^j units above node i
+
+ll lvl[MAXN]; //stores the depth of each node. The depth of the root will be 0, the depth of its immediate children will be 1, and so on...
+
+ll len; //stores the maximum power of 2 that a node can jump up by
+
+
+//This computes the largest power of 2 that will work
+ll pow2[32];
+void compute()
+{
+    pow2[0] = 1;
+    for (ll i = 1; i < 32; i++) {
+        pow2[i] = 2 * pow2[i - 1];
+        if (pow2[i] > n) {
+            len = i;
+            return;
+        }
+    }
+}
+
+//precomputes the dp array, and the lvl array
+void dfs(ll node, ll parent) {
+    //the dp reccurrence is the following. dp[node][i] = dp[dp[node][i - 1]][i - 1]
+    dp[node][0] = parent;
+    for (ll i = 1; i < len; i++) {
+        if (dp[node][i - 1] >= 0) {
+            dp[node][i] = dp[dp[node][i - 1]][i - 1];
+        } else {
+            dp[node][i] = -1;
+        }
+    }
+    
+    //go to all children nodes and compute the levels
+    for (auto el: adj[node]) {
+        if (el == parent) {
+            continue;
+        }
+        
+        lvl[el] = 1 + lvl[node];
+        dfs(el, node);
+    }
+}
+
+//computes the lca of two nodes
+ll lca(ll node1, ll node2) {
+    //make sure that node1 is deeper in the tree than node2
+    if (lvl[node1] < lvl[node2]) {
+        swap(node1, node2);
+    }
+
+    //move node1 up to the same level as node2
+    ll diff = lvl[node1] - lvl[node2];
+    for (ll i = 0; i < len; i++) {
+        if ((1 << i) & diff) {
+            node1 = dp[node1][i];
+        }
+    }
+
+    //If the 2 nodes are equal, we have found the LCA
+    if (node1 == node2) {
+        return node1;
+    }
+    
+    //Move both node1 and node2 as far up as possible until they are equal
+    for (ll i = len - 1; i >= 0; i--) {
+        if (dp[node1][i] != dp[node2][i]) {
+            node1 = dp[node1][i];
+            node2 = dp[node2][i];
+        }
+    }
+    
+    //return the LCA
+    return dp[node1][0];
+}
+
+void solve()
+{
+    //read in input
+    cin >> n >> q;
+
+    //build adjacency graph of tree
+    for (ll i = 0; i < n - 1; i++) {
+        ll a, b, c;
+        cin >> a >> b >> c;
+        
+        a--;
+        b--;
+        
+        adj[a].push_back(b);
+        adj[b].push_back(a);
+    }
+    
+    //initialize the depth/level of each node
+    for (ll i = 0; i < n; i++) {
+        lvl[i] = -1;
+    }
+    
+    //get the largest power of 2 that a node can jump up by
+    compute();
+    
+    //set the level of the inital node
+    lvl[0] = 0;
+    
+    //precompute information using dfs
+    dfs(0, -1);
+    
+    //for each query, return the LCA in logn time
+    for (ll i = 0; i < q; i++) {
+        ll q1, q2;
+        cin >> q1 >> q2;
+        
+        q1--;
+        q2--;
+        
+        cout << lca(q1, q2) << endl;
+    }
+    
+    
+    return;
+}
+
+
+int main()
+{
+    //Fast IO
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    ll t = 1;
+
+    while (t--) {
+        solve();
+    }
+}
+
