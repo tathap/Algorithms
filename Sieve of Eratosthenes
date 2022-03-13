@@ -1,0 +1,12 @@
+//For every number from 1 to 10^7, I will find all its multiples. This code runs in O(nlogn)
+
+const ll MAXVAL = 1e7 + 1;
+
+void Sieve()
+{
+    for (ll i = 1; i < MAXN; i++) {
+        for (ll j = i; j < MAXN; j+= i) {
+            //get all j that are a multiple of i
+        }
+    }
+}
