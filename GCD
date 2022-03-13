@@ -1,0 +1,8 @@
+ll __gcd(ll a, ll b) {
+    if (b == 0) {
+        return a;
+    }
+    return __gcd(b, a % b);
+}
+
+//This uses the Euclidian Algorithm
