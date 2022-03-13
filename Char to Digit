@@ -1,0 +1,11 @@
+char convert(ll digit) {
+    for (char c = 'a'; c <= 'z'; c++) {
+        ll td = c - 'a';
+        if (digit == td) {
+            return c;
+        }
+    }
+    
+    //return digit;
+    return '1';
+}
