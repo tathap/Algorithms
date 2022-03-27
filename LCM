@@ -1,0 +1,20 @@
+ll __gcd(ll a, ll b) {
+    if (b == 0) {
+        return a;
+    }
+    
+    if (a == 0) {
+        return b;
+    }
+    
+    if (a < b) {
+        swap(a, b);
+    }
+    
+    return __gcd(b, a % b);
+}
+
+ll lcm(ll a, ll b) {
+    ll prod = a*b;
+    return (prod/__gcd(a, b));
+}
