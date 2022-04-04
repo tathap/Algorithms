@@ -10,3 +10,27 @@ void Sieve()
         }
     }
 }
+
+
+//To look for primes
+
+bool isPrime[MAXN + 1];
+
+set <ll> primes;
+void Sieve()
+{
+    isPrime[0] = false;
+
+    for (ll i = 1; i <= MAXN; i++) {
+        isPrime[i] = true;
+    }
+        
+    for (ll i = 2; i <= MAXN; i++) {
+        if (isPrime[i]) {
+            primes.insert(i);
+            for (ll j = i; j <= MAXN; j += i) {
+                isPrime[j] = false;
+            }
+        }
+    }
+}
