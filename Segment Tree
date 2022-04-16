@@ -1,0 +1,42 @@
+ll n;
+ll t[4*MAXN];
+ll b[MAXN], b2[MAXN];
+
+void build(ll ind, ll tl, ll tr) {
+    if (tl == tr) {
+        t[ind] = b[tl];
+    } else {
+        ll mid = (tl + tr)/2;
+        build(2*ind, tl, mid);
+        build(2*ind + 1, mid + 1, tr);
+        t[ind] = max(t[2*ind], t[2*ind + 1]);
+    }
+}
+ 
+ll query(ll ind, ll tl, ll tr, ll l, ll r) {
+    if (l > r) {
+        return -1;
+    }
+    
+    if (l == tl && r == tr) {
+        return t[ind];
+    } else {
+        ll mid = (tl + tr)/2;
+        return (max(query(2*ind, tl, mid, l, min(r, mid)), query(2*ind + 1, mid + 1, tr, max(mid + 1, l), r)));
+    }
+}
+ 
+void update(ll ind, ll tl, ll tr, ll pos) {
+    if (tl == tr) {
+        t[ind] = b[pos];
+    } else {
+        ll mid = (tl + tr)/2;
+        if (pos <= mid) {
+            update(2*ind, tl, mid, pos);
+        } else {
+            update(2*ind + 1, mid + 1, tr, pos);
+        }
+        
+        t[ind] = max(t[2*ind], t[2*ind + 1]);
+    }
+}
