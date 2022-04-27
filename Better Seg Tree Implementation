@@ -1,0 +1,85 @@
+class SegmentTree{
+private:
+    ll n;
+    vector<ll> t, arr;
+    
+    ll left(ll ind) {
+        return (2*ind);
+    }
+    ll right(ll ind) {
+        return (2*ind + 1);
+    }
+
+    void build(ll ind, ll l, ll r) {
+        if (l == r) {
+            t[ind] = arr[l];
+        } else {
+            ll mid = (l + r)/2;
+            build(left(ind), l, mid);
+            build(right(ind), mid + 1, r);
+            t[ind] = __gcd(t[left(ind)], t[right(ind)]);
+        }
+    }
+        
+    ll query(ll ind, ll tl, ll tr, ll l, ll r) {
+        if (l > r) {
+            return 1;
+        }
+        
+        if (l == tl && r == tr) {
+            return t[ind];
+        } else {
+            ll mid = (tl + tr)/2;
+            
+            if (r <= mid) {
+                return query(left(ind), tl, mid, l, min(r, mid));
+            } else if (l >= mid + 1) {
+                return query(right(ind), mid + 1, tr, max(mid + 1, l), r);
+            } else {
+                return (__gcd(query(left(ind), tl, mid, l, min(r, mid)), query(right(ind), mid + 1, tr, max(mid + 1, l), r)));
+            }
+        }
+    }
+    
+    void update(ll ind, ll tl, ll tr, ll pos) {
+        if (tl == tr) {
+            t[ind] = arr[pos];
+        } else {
+            ll mid = (tl + tr)/2;
+            if (pos <= mid) {
+                update(left(ind), tl, mid, pos);
+            } else {
+                update(right(ind), mid + 1, tr, pos);
+            }
+            
+            t[ind] = __gcd(t[2*ind], t[2*ind + 1]);
+        }
+    }
+    
+public:
+    SegmentTree(const vector<ll> &_arr) {
+        arr = _arr;
+        n = (ll)arr.size();
+        t.resize(4*(n+1));
+        build(1, 0, n - 1);
+    }
+    
+    ll query(ll l, ll r) {
+        return query(1, 0, n - 1, l, r);
+    }
+    
+    void update(ll pos) {
+        update(1, 0, n - 1, pos);
+    }
+};
+
+int main()
+{
+    vector<ll> v;
+    //read in v
+    
+    //Create Segment Tree
+    SegmentTree st(v);
+}
+
+
