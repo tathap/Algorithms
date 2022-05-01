@@ -1,0 +1,42 @@
+    ll n, m;
+    vector<ll> adj[MAXN];
+
+    cin >> n >> m;
+    
+    for (ll i = 0; i < m; i++) {
+        ll u, v;
+        cin >> u >> v;
+        
+        u--;
+        v--;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+    
+    bool visited[MAXN];
+    
+    for (ll i = 0; i < n; i++) {
+        visited[i] = false;
+    }
+    
+    deque<pair<ll, ll>> d;
+    d.push_back({0, 0});
+    
+    while (!d.empty()) {
+        pair<ll, ll> cur = d.front();
+        d.pop_front();
+        
+        if (visited[cur.first]) {
+            continue;
+        }
+        
+        visited[cur.first] = true;
+        
+        for (auto el: adj[cur.first]) {
+            if (el > cur.first) {
+                d.push_back({el, cur.second + 1});
+            } else {
+                d.push_front({el, cur.second});
+            }
+        }
+    }
