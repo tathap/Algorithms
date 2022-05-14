@@ -1,0 +1,55 @@
+//Union-Find Disjoint-Set-Union data structure
+
+class UFDS{
+private: vector<ll> p, rank, size;
+public:
+    //constructor
+    UFDS(ll n) {
+        for (ll i = 0; i < n; i++) {
+            rank.push_back(ZER);
+            size.push_back(1);
+            p.push_back(i);
+        }
+    }
+      
+    //finds the parent of the set
+    ll findSet(ll i) {
+        if (p[i] == i) {
+            return i;
+        } else {
+            p[i] = findSet(p[i]);
+            return p[i];
+        }
+    }
+    
+    //Checks if two nodes are in the same set
+    bool isSameSet(ll i, ll j) {
+        return (findSet(i) == findSet(j));
+    }
+
+    //merges 2 sets
+    void unionSet(ll i, ll j) {
+        if (!isSameSet(i, j)) {
+            ll x = findSet(i), y = findSet(j);
+            if (rank[x] > rank[y]) {
+                p[y] = x;
+                size[x] += size[y];
+                size[y] = 0;
+            } else {
+                p[x] = y;
+                if (rank[x] == rank[y]) {
+                    rank[y]++;
+                }
+
+                size[y] += size[x];
+                size[x] = 0;
+            }
+        }
+    }
+
+    //Find size of the set a node is in
+    ll findSize(ll i) {
+        i = p[i];
+        return size[i];
+    }
+};
