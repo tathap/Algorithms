@@ -1,0 +1,7 @@
+basically a regular BFS but the queue starts off with multiple sources. This allows you to find the shortest path from any
+starting group of nodes to any other nodes
+
+queue<ll> q;
+INITIALIZE() ////put starting nodes into q
+
+BFS() //Run BFS
