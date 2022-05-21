@@ -1,0 +1,5 @@
+Find the MST of a graph.
+
+Step 1: Sort the edges by weight and create a UFDS data structure
+Step 2: Go through the edges from least to most expensive. If it connects 2 nodes in different sets, use it. Else ignore it.
+Step 3: Store the edges you've used and . . . Bam! You've used Kruskal's Algorithm to get the MST.
