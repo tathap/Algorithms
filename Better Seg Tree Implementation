@@ -17,13 +17,13 @@ private:
             ll mid = (l + r)/2;
             build(left(ind), l, mid);
             build(right(ind), mid + 1, r);
-            t[ind] = __gcd(t[left(ind)], t[right(ind)]);
+            t[ind] = t[left(ind)] + t[right(ind)];
         }
     }
         
     ll query(ll ind, ll tl, ll tr, ll l, ll r) {
         if (l > r) {
-            return 1;
+            return 0; //If dealing with gcd or smth like that, replace with 1
         }
         
         if (l == tl && r == tr) {
@@ -36,7 +36,7 @@ private:
             } else if (l >= mid + 1) {
                 return query(right(ind), mid + 1, tr, max(mid + 1, l), r);
             } else {
-                return (__gcd(query(left(ind), tl, mid, l, min(r, mid)), query(right(ind), mid + 1, tr, max(mid + 1, l), r)));
+                return (query(left(ind), tl, mid, l, min(r, mid)) + query(right(ind), mid + 1, tr, max(mid + 1, l), r));
             }
         }
     }
@@ -52,7 +52,7 @@ private:
                 update(right(ind), mid + 1, tr, pos);
             }
             
-            t[ind] = __gcd(t[2*ind], t[2*ind + 1]);
+            t[ind] = t[left(ind)] + t[right(ind)];
         }
     }
     
@@ -68,10 +68,12 @@ public:
         return query(1, 0, n - 1, l, r);
     }
     
-    void update(ll pos) {
+    void update(ll pos, ll val) {
+        arr[pos]+=val;
         update(1, 0, n - 1, pos);
     }
 };
+
 
 int main()
 {
