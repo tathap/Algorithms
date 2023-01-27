@@ -34,3 +34,28 @@ void Sieve()
         }
     }
 }
+
+//We can also use the Sieve to get the prime factorization of a number in logn time by precomputing the smallest prime that divides every number 
+
+
+ll smallest[MAXN + 1];
+void Sieve()
+{
+    for (ll i = 0; i <= MAXN; i++) {
+        smallest[i] = INF;
+    }
+        
+    for (ll i = 2; i <= MAXN; i++) {
+        if (smallest[i] == INF) {
+            smallest[i] = i;
+            for (ll j = i; j <= MAXN; j += i) {
+                smallest[j] = min(smallest[j], smallest[i])
+            }
+        }
+    }
+}
+
+//Once you have precomputed the smallest prime number that divides every single number, then it's very easy to get the prime factorization of some number k
+while (k != 1) {
+    k /= smallest[k];
+}
