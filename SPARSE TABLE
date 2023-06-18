@@ -1,0 +1,38 @@
+const ll MAXN = 1e6 + 5;
+const ll MAXLOG = 26;
+const ll INF = 1e8;
+ 
+//compute logs quickly
+ll log2_floor(unsigned long long i) {
+    return i ? __builtin_clzll(1) - __builtin_clzll(i) : -1;
+}
+ 
+ll spt[MAXN][MAXLOG];
+ll pow2[MAXLOG];
+ll value[MAXN];
+ 
+void precompute() {
+    pow2[0] = 1;
+    for (ll i = 1; i < MAXLOG; i++) {
+        pow2[i] = 2*pow2[i-1];
+    }
+    
+    for (ll i = 0; i < MAXN; i++) {
+        spt[i][0] = value[i];
+    }
+    
+    for (ll j = 1; j < MAXLOG; j++) {
+        for (ll i = 0; i < MAXN; i++) {
+            if (i+pow2[j]-1 >= MAXN) {
+                break;
+            }
+            
+            spt[i][j] = max(spt[i][j-1], spt[i+pow2[j-1]][j-1]);
+        }
+    }
+}
+ 
+ll query(ll num1, ll num2) {
+    ll clogp = log2_floor(num2-num1+1);
+    return max(spt[num1][clogp], spt[num2-pow2[clogp]+1][clogp]);
+}
